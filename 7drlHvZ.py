@@ -1131,7 +1131,7 @@ def setup():
 		libtcod.console_put_char(con, 25+x, 25, string[x], libtcod.BKGND_NONE)
 	libtcod.console_blit(con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
 	libtcod.console_flush()
-	time.sleep(1)
+	#time.sleep(1)
 	name = ""
 	x = 0
 	while x < 14:
@@ -1146,9 +1146,9 @@ def setup():
 				libtcod.console_put_char(con, 25+x, 27, ' ', libtcod.BKGND_NONE)
 				libtcod.console_blit(con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
 				libtcod.console_flush()
-				time.sleep(.2)
+				#time.sleep(.2)
 		elif key.vk == libtcod.KEY_SHIFT:
-			time.sleep(.1)
+			time.sleep(.001)
 		else:
 			input = chr(key.c)
 			if input != '' and x < 13:
@@ -1158,7 +1158,7 @@ def setup():
 				libtcod.console_blit(con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
 				libtcod.console_flush()
 				x+=1
-				time.sleep(.2)
+				#time.sleep(.2)
 		if x>13:
 			x = 13
 	for x in range(40):
@@ -1181,7 +1181,7 @@ def setup():
 			libtcod.console_put_char(con, 25+x, 20+2*y, options[y][x], libtcod.BKGND_NONE)
 	libtcod.console_blit(con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
 	libtcod.console_flush()
-	time.sleep(.7)
+	#time.sleep(.7)
 	choices = [1,2,1,2,3,2]
 	w = 0
 	while True:
@@ -1213,7 +1213,7 @@ def setup():
 			choices[w] = (choices[w]-1)%4
 		elif key.vk == libtcod.KEY_RIGHT:
 			choices[w] = (choices[w]+1)%4
-		time.sleep(.3)
+		#time.sleep(.3)
 
 	for y in range(len(options)):
 		for x in range(len(options[y])):
@@ -1221,7 +1221,8 @@ def setup():
 			libtcod.console_put_char(con, 25+x, 20+2*y, ' ', libtcod.BKGND_NONE)
 			libtcod.console_set_char_background(con, 25+x, 20+2*y, libtcod.black, libtcod.BKGND_SET )
 
-	_thread.start_new_thread(mapMaker, (choices[0],choices[1],choices[2],choices[3],choices[4],choices[5]))
+	lock = _thread.allocate_lock()
+	_thread.start_new_thread(mapMaker, (choices[0],choices[1],choices[2],choices[3],choices[4],choices[5],lock))
 	options = []
 	options.append("Player Options")
 	options.append(" ")
@@ -1242,7 +1243,7 @@ def setup():
 	clip = 0
 	points = 10
 	at = 0
-	time.sleep(1)
+	#time.sleep(1)
 	while True:
 		for i in range(len(options)):
 			for j in range(len(options[i])):
@@ -1318,7 +1319,7 @@ def setup():
 					points += 1
 				elif darts == 3:
 					darts = 2
-		time.sleep(.3)
+		#time.sleep(.3)
 		if darts == 0:
 			dartNum = 0
 			dartType = 1
@@ -1336,8 +1337,8 @@ def setup():
 			libtcod.console_set_default_foreground(con, libtcod.black)
 			libtcod.console_put_char(con, x, y, ' ', libtcod.BKGND_NONE)
 			libtcod.console_set_char_background(con, x, y, libtcod.black, libtcod.BKGND_SET )
-	time.sleep(2)
-	return (name, stamina, speed, accuracy, training, nerf, dartNum, dartType)
+	#time.sleep(2)
+	return (name, stamina, speed, accuracy, training, nerf, dartNum, dartType, lock)
 
 def accumulator(stat, y):
 	for n in range(stat):
@@ -1350,8 +1351,9 @@ def accumulator(stat, y):
 		libtcod.console_set_default_foreground(con, libtcod.black)
 		libtcod.console_put_char(con, 30+n+stat, y, ' ', libtcod.BKGND_NONE)
 
-def mapMaker(inSize, zombieRate, ammoRate, bellTime, buildingRate, numClasses):
+def mapMaker(inSize, zombieRate, ammoRate, bellTime, buildingRate, numClasses, lock):
 	global size, goal, newGoal, goalTimer, winCount, zombies, darts
+	lock.acquire()
 	size = 200*(1+inSize)+61
 	sendBuilding = 3-buildingRate
 	make_map(size, sendBuilding)
@@ -1369,16 +1371,18 @@ def mapMaker(inSize, zombieRate, ammoRate, bellTime, buildingRate, numClasses):
 		darts = []
 	zombieScale = 1000//(zombieRate+1)
 	zombies = spawnZom(size*size//zombieScale)
-	#genAmmo
+	lock.release()
 
 def play():
 	global player, goal, winCount, pocket, objects, quit, grab, feed, feedLocation, menu, preTriangle, tagged, locked, gun, playerName, con, darts, gunHand
 	con = libtcod.console_new(SCREEN_WIDTH, SCREEN_HEIGHT)
-	(playerName, stamina, speed, accurate, technical, gunType, ammoNumber, ammoType) = setup()
+	(playerName, stamina, speed, accurate, technical, gunType, ammoNumber, ammoType, lock) = setup()
 	quit = False
 	player1 = Object(31, 31, '@', libtcod.red)
 	player1.makeAlive(stamina, speed, accurate, technical)
+	lock.acquire()
 	objects = [player1, goal]
+	lock.release()
 	objects = objects + darts
 	player = player1
 	pocket1 = []
