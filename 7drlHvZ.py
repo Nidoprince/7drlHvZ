@@ -140,15 +140,15 @@ class Zombie(Object):
 class Rect:
     #a rectangle on the map. used to characterize a room or building
 	def __init__(self, x, y, w, h):
-		self.center_x = int((2*x+w) // 2)
-		self.center_y = int((2*y+h) // 2)
+		self.center_x = (2*x+w) // 2
+		self.center_y = (2*y+h) // 2
 		self.x1 = x
 		self.y1 = y
 		self.x2 = x + w
 		self.y2 = y + h
 	def center(self):
-		center_x = int((self.x1 + self.x2) // 2)
-		center_y = int((self.y1 + self.y2) // 2)
+		center_x = (self.x1 + self.x2) // 2
+		center_y = (self.y1 + self.y2) // 2
 		return (center_x, center_y)
 	def intersect(self, other):
 		return (self.x1 <= other.x2 and self.x2 >= other.x1 and self.y1 <= other.y2 and self.y2 >= other.y1)
@@ -474,27 +474,27 @@ def handle_keys():
 		elif key_char == '5':
 			player.vision = player.facing
 			player.init = 10
-		elif key_char == 'L':
+		elif key_char == 'l' and key.shift:
 			locked = not locked
-		elif key_char == ']':
+		elif key_char == ']' and not key.shift:
 			if hasattr(player, 'target'):
 				if targets.index(player.target)<len(targets)-1:
 					player.target = targets[targets.index(player.target)+1]
 				else:
 					player.target = targets[0]
 			player.init = 5
-		elif key_char == '[':
+		elif key_char == '['and not key.shift:
 			if hasattr(player, 'target'):
 				if targets.index(player.target)>0:
 					player.target = targets[targets.index(player.target)-1]
 				else:
 					player.target = targets[len(targets)-1]
 			player.init = 5
-		elif key_char == '}':
+		elif key_char == '['and key.shift:
 			if grab[gunHand] < len(pocket[gunHand])-1:
 				grab[gunHand] += 1
 			player.init = 250//player.tech
-		elif key_char == '{':
+		elif key_char == ']'and key.shift:
 			if grab[gunHand] > 0:
 				grab[gunHand] -= 1
 			player.init = 250//player.tech
@@ -506,7 +506,7 @@ def handle_keys():
 		elif key_char == 'c':
 			player.init = gun.cock()
 			addToFeed('Cachunk!')
-		elif key_char == 'l':
+		elif key_char == 'l' and not key.shift:
 			for x in range(5):
 				if(len(pocket[gunHand])>0):
 					if(not gun.loaded[(x+gun.chamber+1)%6].real()):
@@ -526,10 +526,10 @@ def handle_keys():
 		elif key_char == '-':
 			if feedLocation<len(feed)-1:
 				feedLocation += 1
-		elif key_char == '+':
+		elif key_char == '=' and key.shift:
 			if feedLocation-23>0:
 				feedLocation -= 1
-		elif key_char == '?':
+		elif key_char == '/' and key.shift:
 			speal = []
 			speal.append("Your goal is to make it to the 'C' square and take classes.")
 			speal.append("The building the square is located in is shown on your minimap.")
@@ -1151,6 +1151,8 @@ def setup():
 			time.sleep(.001)
 		else:
 			input = chr(key.c)
+			if(key.shift):
+				input = input.upper()
 			if input != '' and x < 13:
 				name += input
 				libtcod.console_set_default_foreground(con, libtcod.white)

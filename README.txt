@@ -192,6 +192,5 @@ spacebar					skips your turn and regenerates some endurance
 {/}							switches between darts in your pockets
 esc							exits the game
 
-Errors:
-All commands that involve using uppercase letters, or anything involving the shift key, currently do not function.
-If you have any other errors or questions in general, please email me at Nidoprince(at)gmail(dot)com
+
+If you find any bugs or have questions in general, please email me at Nidoprince(at)gmail(dot)com
