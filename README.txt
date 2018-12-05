@@ -192,13 +192,6 @@ spacebar					skips your turn and regenerates some endurance
 {/}							switches between darts in your pockets
 esc							exits the game
 
-
-
 Errors:
-If the game crashes right after you select your characters stats, try again, but wait in that last
-menu a bit longer before finishing up.  After the map settings are selected I start a thread to 
-generate the map while you are selecting the characters stats, but if you select them too fast then
-the code can try and use the map before it is generated.  Not likely to be an issue unless you are 
-spamming enter after selecting a large map.
-
+All commands that involve using uppercase letters, or anything involving the shift key, currently do not function.
 If you have any other errors or questions in general, please email me at Nidoprince(at)gmail(dot)com
