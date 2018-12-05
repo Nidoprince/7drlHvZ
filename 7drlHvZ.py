@@ -120,7 +120,8 @@ class Zombie(Object):
 		self.runInit = 0
 
 	def decrement(self):
-		self.init -= 1
+		if(self.init > 0):
+			self.init -= 1
 		if self.spawnTime > 0:
 			self.spawnTime -= 1
 			if self.spawnTime == 0:
@@ -1435,12 +1436,13 @@ def play():
 				addToFeed(str(goal.init//6000)+" minutes till Class")
 			goal.decrement()
 			for z in range(len(zombies)-1):
-				while zombies[z].init == 0:
-					zombies[z] = zomMove(zombies[z])
-				if zombies[z].velocity > 0:
-					if zombies[z].runInit == 0:
-						zombies[z].run()
-					zombies[z].runInit -= 1
+				if(((zombies[z].x-player.x)**2+(zombies[z].y-player.y)**2)<1800):
+					while zombies[z].init == 0:
+						zombies[z] = zomMove(zombies[z])
+					if zombies[z].velocity > 0:
+						if zombies[z].runInit == 0:
+							zombies[z].run()
+						zombies[z].runInit -= 1
 				zombies[z].decrement()
 			if tagged:
 				break
