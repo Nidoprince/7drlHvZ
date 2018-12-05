@@ -425,6 +425,41 @@ def handle_keys():
 		elif player.facing+player.vision == 10:
 			player.vision = right[player.vision]
 		player.init = 250//player.speed
+	elif key.vk == libtcod.KEY_KP8:
+		if(player.facing != 2):
+			player.vision = 8
+			player.init = 30
+	elif key.vk == libtcod.KEY_KP9:
+		if(player.facing != 1):
+			player.vision = 9
+			player.init = 30
+	elif key.vk == libtcod.KEY_KP7:
+		if(player.facing != 3):
+			player.vision = 7
+			player.init = 30
+	elif key.vk == libtcod.KEY_KP6:
+		if(player.facing != 4):
+			player.vision = 6
+			player.init = 30
+	elif key.vk == libtcod.KEY_KP4:
+		if(player.facing != 6):
+			player.vision = 4
+			player.init = 30
+	elif key.vk == libtcod.KEY_KP3:
+		if(player.facing != 7):
+			player.vision = 3
+			player.init = 30
+	elif key.vk == libtcod.KEY_KP2:
+		if(player.facing != 8):
+			player.vision = 2
+			player.init = 30
+	elif key.vk == libtcod.KEY_KP1:
+		if(player.facing != 9):
+			player.vision = 1
+			player.init = 30
+	elif key.vk == libtcod.KEY_KP5:
+		player.vision = player.facing
+		player.init = 10
 	else:
 		key_char = chr(key.c)
 		if key_char == 'm':
@@ -439,41 +474,6 @@ def handle_keys():
 					putInPocket(Ammo(paintByNumber(object.color), object.init))
 					del objects[objects.index(object)]
 			player.init = 500//player.tech
-		elif key_char == '8':
-			if(player.facing != 2):
-				player.vision = 8
-				player.init = 30
-		elif key_char == '9':
-			if(player.facing != 1):
-				player.vision = 9
-				player.init = 30
-		elif key_char == '7':
-			if(player.facing != 3):
-				player.vision = 7
-				player.init = 30
-		elif key_char == '6':
-			if(player.facing != 4):
-				player.vision = 6
-				player.init = 30
-		elif key_char == '4':
-			if(player.facing != 6):
-				player.vision = 4
-				player.init = 30
-		elif key_char == '3':
-			if(player.facing != 7):
-				player.vision = 3
-				player.init = 30
-		elif key_char == '2':
-			if(player.facing != 8):
-				player.vision = 2
-				player.init = 30
-		elif key_char == '1':
-			if(player.facing != 9):
-				player.vision = 1
-				player.init = 30
-		elif key_char == '5':
-			player.vision = player.facing
-			player.init = 10
 		elif key_char == 'l' and key.shift:
 			locked = not locked
 		elif key_char == ']' and not key.shift:
